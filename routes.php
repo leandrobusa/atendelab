@@ -5,6 +5,8 @@ require_once __DIR__ . '/app/Controllers/UsuariosController.php';
 require_once __DIR__ . '/app/Controllers/PessoasController.php';
 require_once __DIR__ . '/app/Controllers/TiposAtendimentosController.php';
 require_once __DIR__ . '/app/Controllers/AtendimentosController.php';
+require_once __DIR__ . '/app/Controllers/FrontendController.php';
+require_once __DIR__ . '/app/Controllers/DashboardController.php';
 require_once __DIR__ . '/app/Middleware/auth.php';
 
 $controller = $_GET['controller'] ?? 'auth';
@@ -34,6 +36,44 @@ switch ($controller) {
             default:
                 http_response_code(404);
                 echo 'Acao de autenticacao nao encontrada.';
+        }
+        break;
+
+    case 'frontend':
+        exigirAutenticacao();
+        $frontendController = new FrontendController();
+
+        switch ($action) {
+            case 'pessoas':
+                $frontendController->pessoas();
+                break;
+
+            case 'tipos':
+                $frontendController->tiposAtendimentos();
+                break;
+
+            case 'atendimentos':
+                $frontendController->atendimentos();
+                break;
+
+            default:
+                http_response_code(404);
+                echo 'Acao de frontend nao encontrada.';
+        }
+        break;
+
+    case 'dashboard':
+        exigirAutenticacao();
+        $dashboardController = new DashboardController();
+
+        switch ($action) {
+            case 'resumo':
+                $dashboardController->resumo();
+                break;
+
+            default:
+                http_response_code(404);
+                echo 'Acao de dashboard nao encontrada.';
         }
         break;
 
